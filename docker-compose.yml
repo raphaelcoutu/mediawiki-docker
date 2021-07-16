@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  nginx:
+    build: ./docker/nginx/
+    image: raphaelcoutu/mw-nginx
+    ports:
+      - 8080:80
+    volumes_from:
+      - mediawiki
+  mediawiki:
+    build:
+      context: ./docker/mediawiki
+      dockerfile: ./1.35/fpm-alpine/Dockerfile
+    image: raphaelcoutu/mw-app:1.35-fpm-alpine
+    volumes:
+      - mwdata:/var/www/html
+      - ./LocalSettings.php:/var/www/html/LocalSettings.php
+      - ./images:/var/www/html/images
+      - ./logo.jpg:/var/www/html/resources/assets/logo.jpg
+  postgres:
+    image: postgres:12
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - ./.env
+volumes:
+  mwdata:
+  pgdata:
