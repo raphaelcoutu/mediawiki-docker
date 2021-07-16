@@ -17,12 +17,13 @@ RUN set -eux; \
 		$PHPIZE_DEPS \
 		icu-dev \
 		oniguruma-dev \
+		postgresql-dev \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		intl \
 		mbstring \
-		mysqli \
+		pgsql \
 		opcache \
 	; \
 	\
@@ -57,8 +58,8 @@ RUN set -eux; \
 	chown -R www-data:www-data /var/www/data
 
 # Version
-ENV MEDIAWIKI_MAJOR_VERSION 1.36
-ENV MEDIAWIKI_VERSION 1.36.1
+ENV MEDIAWIKI_MAJOR_VERSION 1.35
+ENV MEDIAWIKI_VERSION 1.35.3
 
 # MediaWiki setup
 RUN set -eux; \

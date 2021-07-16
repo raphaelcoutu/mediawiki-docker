@@ -1,4 +1,4 @@
-FROM php:%%PHP_VERSION%%-%%VARIANT%%
+FROM php:7.4-fpm
 
 # System dependencies
 RUN set -eux; \
@@ -22,16 +22,17 @@ RUN set -eux; \
 	apt-get install -y --no-install-recommends \
 		libicu-dev \
 		libonig-dev \
+		libpq-dev \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		intl \
 		mbstring \
-		mysqli \
+		pgsql \
 		opcache \
 	; \
 	\
-	pecl install APCu-%%APCU_VERSION%%; \
+	pecl install APCu-5.1.20; \
 	docker-php-ext-enable \
 		apcu \
 	; \
@@ -50,7 +51,7 @@ RUN set -eux; \
 	\
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
-%%VARIANT_EXTRAS%%
+
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
@@ -67,8 +68,8 @@ RUN set -eux; \
 	chown -R www-data:www-data /var/www/data
 
 # Version
-ENV MEDIAWIKI_MAJOR_VERSION %%MEDIAWIKI_MAJOR_VERSION%%
-ENV MEDIAWIKI_VERSION %%MEDIAWIKI_VERSION%%
+ENV MEDIAWIKI_MAJOR_VERSION 1.35
+ENV MEDIAWIKI_VERSION 1.35.3
 
 # MediaWiki setup
 RUN set -eux; \
@@ -98,4 +99,4 @@ RUN set -eux; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $fetchDeps; \
 	rm -rf /var/lib/apt/lists/*
 
-CMD ["%%CMD%%"]
+CMD ["php-fpm"]
