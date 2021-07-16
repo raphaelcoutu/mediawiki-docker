@@ -17,12 +17,12 @@ services:
       - ./LocalSettings.php:/var/www/html/LocalSettings.php
       - ./images:/var/www/html/images
       - ./logo.jpg:/var/www/html/resources/assets/logo.jpg
-  postgres:
-    image: postgres:12
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    env_file:
-      - ./.env
+  # postgres:
+  #   image: postgres:12
+  #   volumes:
+  #     - pgdata:/var/lib/postgresql/data
+  #   env_file:
+  #     - ./.env
 volumes:
   mwdata:
-  pgdata:
+  # pgdata:
