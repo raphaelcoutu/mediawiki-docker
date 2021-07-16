@@ -1,0 +1,42 @@
+server {
+    listen 80 default_server;
+
+    root /var/www/html;
+
+    index index.html index.htm index.php;
+
+    server_name _;
+
+    charset utf-8;
+
+    location = /favicon.ico { log_not_found off; access_log off; }
+    location = /robots.txt  { log_not_found off; access_log off; }
+
+    client_max_body_size 100M;
+
+    # index.php fallback
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+	location ~ [^/]\.php(/|$) {
+		fastcgi_split_path_info ^(.+?\.php)(/.*)$;
+		if (!-f $document_root$fastcgi_script_name) {
+			return 404;
+		}
+
+		include fastcgi_params;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_param PATH_INFO       $fastcgi_path_info;
+		fastcgi_param PATH_TRANSLATED $document_root$fastcgi_path_info;
+
+		fastcgi_pass   mediawiki:9000;
+		fastcgi_index  index.php;
+  }
+
+    error_page 404 =200 /index.php;
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
